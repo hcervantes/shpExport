@@ -616,7 +616,6 @@ class Writer:
         # Field descriptors
         for field in self.fields:
             name, fieldType, size, decimal = field
-            name = b(name)
             name = name.replace(b(' '), b('_'))
             name = name.ljust(11).replace(b(' '), b('\x00'))
             fieldType = b(fieldType)
