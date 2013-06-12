@@ -1,0 +1,102 @@
+{
+ "displayFieldName": "STATE_FIPS",
+ "fieldAliases": {
+  "STATE_FIPS": "STATE_FIPS"
+ },
+ "geometryType": "esriGeometryPoint",
+ "spatialReference": {
+  "wkid": 4269,
+  "latestWkid": 4269
+ },
+ "fields": [
+  {
+   "name": "STATE_FIPS",
+   "type": "esriFieldTypeString",
+   "alias": "STATE_FIPS",
+   "length": 2
+  }
+ ],
+ "features": [
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.95355599980951,
+    "y": 32.196335999706662
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.929658000316408,
+    "y": 32.198095999930501
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.922701999697495,
+    "y": 32.209736909031164
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.942107999784298,
+    "y": 32.218989091073752
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.916962000296053,
+    "y": 32.194589090913894
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.979262909155921,
+    "y": 32.174601090967599
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -87.983266000225683,
+    "y": 32.174265999975944
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -88.008253999622355,
+    "y": 32.19314709096551
+   }
+  },
+  {
+   "attributes": {
+    "STATE_FIPS": "01"
+   },
+   "geometry": {
+    "x": -88.010408000029145,
+    "y": 32.227608000209102
+   }
+  }
+ ]
+}
