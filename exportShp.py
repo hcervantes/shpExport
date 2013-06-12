@@ -7,9 +7,16 @@ version: 1.0
 Compatible with Python versions 2.4-3.x
 """
 from datetime import datetime
-import sys, os, json
+import sys, os, json, urllib, urllib2
 import shapefile, shutil, StringIO, zipfile
 
+def ServiceRequest(url, values):    
+    data = urllib.urlencode(values)
+    req = urllib2.Request(url, data)
+    response = urllib2.urlopen(req)
+    the_page = response.read()
+    global jsonObject
+    jsonObject = json.loads(the_page)
 
 def LoadDataFile(jsonFile):
 
@@ -150,7 +157,17 @@ def WritePolylines(features, fields):
     SaveShapeZip()
     
 # Main Entry        
-LoadDataFile('lineFeatures.json')
+#LoadDataFile('lineFeatures.json')
+url = 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Military/MapServer/4/query'
+values = {'geometry' : '-137,-65,132,61',
+    'geometryType' : 'esriGeometryEnvelope',
+    'outSR' : '4269',
+    'returnZ' : 'false',
+    'returnM' : 'false',
+    'spatialRel' : 'esriSpatialRelIntersects',
+    'returnGeometry' : 'true',
+    'f' : 'pjson'}
+ServiceRequest(url, values)
 
 # Determine geometry type
 geomType = jsonObject["geometryType"]
