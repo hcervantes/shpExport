@@ -16,7 +16,7 @@ def ServiceRequest(url, values):
     response = urllib2.urlopen(req)
     the_page = response.read()
     global jsonObject
-    jsonObject = json.loads(the_page)
+    jsonObject = json.loads(the_page) 
 
 def LoadDataFile(jsonFile):
 
