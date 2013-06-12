@@ -8,7 +8,7 @@ Compatible with Python versions 2.4-3.x
 """
 from datetime import datetime
 import sys, os, json
-import shapefile, shutil
+import shapefile, shutil, StringIO, zipfile
 
 
 def LoadDataFile(jsonFile):
@@ -19,9 +19,8 @@ def LoadDataFile(jsonFile):
             jsonStr = jsonStr + line
         global jsonObject
         jsonObject = json.loads(jsonStr)
-        print jsonStr
         
-def SaveShape(w):
+def SaveShape():
     # save the shapefile
     # Create unique name
     dt = datetime.now()
@@ -30,12 +29,43 @@ def SaveShape(w):
     # copy WebMercator projection
     shutil.copy('4269.prj', 'shapefiles/' + fileSafeStr + '.prj')
     print 'Created shapefile ' + fileSafeStr + '.shp'
+
+def SaveShapeZip():
+    # save the shapefile
+    # Create unique name
+    dt = datetime.now()
+    fileSafeStr = dt.strftime("%Y%m%d_%H%M%S")
+    
+    # Set up buffers for saving
+    shp = StringIO.StringIO()
+    shx = StringIO.StringIO()
+    dbf = StringIO.StringIO()
+    # Save shapefile components to buffers
+    w.saveShp(shp)
+    w.saveShx(shx)
+    w.saveDbf(dbf)
+    # Save shapefile buffers to zip file 
+    # Note: zlib must be available for
+    # ZIP_DEFLATED to compress.  Otherwise
+    # just use ZIP_STORED.
+    z = zipfile.ZipFile('shapefiles/' + fileSafeStr + '.zip', 'w', zipfile.ZIP_DEFLATED)
+    z.writestr(fileSafeStr + '.shp', shp.getvalue())
+    z.writestr(fileSafeStr + '.shx', shx.getvalue())
+    z.writestr(fileSafeStr + '.dbf', dbf.getvalue())
+    # write the prj file
+    prjStr = ''
+    with open('4269.prj') as f:        
+        for line in f:
+            prjStr = prjStr + line
+    z.writestr(fileSafeStr + '.prj', prjStr)  
+    z.close()
+    
+    print 'Created shapefile ' + fileSafeStr + '.shp'
     
 def WriteAttributes(features, w):
         # Itererate over the features to create attributes
     for feature in features:
         # Add the records
-        print 'creating attributes'
         rec = feature["attributes"].values()
         w.record(*rec)
         
@@ -68,8 +98,10 @@ def WriteFields(fields, w):
             w.field(str(field["name"]), str(fieldType))
         print 'created field: ' + field['name'] + ' - fieldType: ' + fieldType
 def WritePoints(features, fields):
+    global w
     w = shapefile.Writer(shapefile.POINT)    
     # Itererate over the features to create geometries
+    print 'Constructing ' + str(len(features)) + ' features'
     for feature in features:        
         # Write the geometries
         x = feature["geometry"]["x"]
@@ -81,11 +113,12 @@ def WritePoints(features, fields):
     # Populate Attributes
     WriteAttributes(features, w)
     # Save the shapefile
-    SaveShape(w)
+    SaveShapeZip()
         
 def WritePolygons(features, fields):
+    global w
     w = shapefile.Writer(shapefile.POLYGON)
-    
+    print 'Constructing ' + str(len(features)) + ' features'
     # Itererate over the features to create geometries
     for feature in features:        
         # Write the geometries
@@ -96,11 +129,13 @@ def WritePolygons(features, fields):
     # Populate Attributes
     WriteAttributes(features, w)
     # Save the shapefile
-    SaveShape(w)
+    SaveShapeZip()
 
         
 def WritePolylines(features, fields):
+    global w
     w = shapefile.Writer(shapefile.POLYLINE)
+    print 'Constructing ' + str(len(features)) + ' features'
     # Itererate over the features to create geometries and attributes
     for feature in features:        
         # Write the geometries
@@ -112,13 +147,12 @@ def WritePolylines(features, fields):
     # Populate Attributes
     WriteAttributes(features, w)
     # Save the shapefile
-    SaveShape(w)
-
+    SaveShapeZip()
+    
 # Main Entry        
 LoadDataFile('lineFeatures.json')
 
 # Determine geometry type
-print jsonObject["geometryType"]
 geomType = jsonObject["geometryType"]
 geomType = geomType.upper()
 
